@@ -24,6 +24,8 @@
 #include "Mouse.h"
 #include "Graphics.h"
 #include "Sprite.h"
+#include "Board.h"
+#include "Text.h"
 
 class Game
 {
@@ -43,7 +45,7 @@ private:
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
-	Color surface[4001];
-	Sprite sprite;
 	/********************************/
+	Board brd;
+	Text txt;
 };

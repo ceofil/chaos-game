@@ -22,12 +22,13 @@
 #include "Game.h"
 #include "Bitmap.h"
 
-Game::Game( MainWindow& wnd )
+Game::Game(MainWindow& wnd)
 	:
-	wnd( wnd ),
-	gfx( wnd )
+	wnd(wnd),
+	gfx(wnd),
+	brd(3),
+	txt(gfx,0,0,2,2,800,600)
 {
-	LoadSprite( &sprite, surface, "WalkinDude\\wdude00.bmp", 50,80,Color(255,255,255) );
 }
 
 void Game::Go()
@@ -40,10 +41,43 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+	if (!wnd.kbd.KeyIsEmpty())
+	{
+		const auto e = wnd.kbd.ReadKey();
+		if (e.IsRelease())
+		{
+			switch (e.GetCode())
+			{
+			case VK_SPACE:
+			{
+				if (brd.started)
+				{
+					brd.started = false;
+				}
+				else
+				{
+					brd.started = true;
+					brd.Reset();
+				}
+				break;
+			}
+			case VK_ESCAPE:
+			{
+				brd.Delete();
+				brd.started = false;
+			}
+			}
+		}
+	}
+	if(brd.started)
+	brd.Update();
 }
 
 void Game::ComposeFrame()
 {
-	DrawSprite(&sprite, 400,400,gfx);
-	DrawSurface(100, 100, 50, 80, surface, gfx);
+	if (brd.started)
+	{
+		txt.drawint(brd.GetNumberDrawnPoints(), 50, 50, Colors::White);
+		brd.Draw(gfx);
+	}
 }
